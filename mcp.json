@@ -1,0 +1,65 @@
+{
+  "server_name": "buddy-checkin",
+  "display_name": "Buddy 签到",
+  "description": "WorkBuddy「Buddy 加油站」每日积分自动签到，经客户端宿主通道（WBIPC）直连接口，无需点击界面、无需解密本地令牌，兼容桌面端 v5.3.8+ 加密登录态",
+  "version": "3.1.1",
+  "type": "skill",
+  "author": "GTH",
+  "license": "proprietary",
+  "keywords": [
+    "buddy-checkin",
+    "daily-checkin",
+    "credits",
+    "wbipc",
+    "签到",
+    "领积分",
+    "Buddy加油站"
+  ],
+  "trigger_phrases": [
+    "签到",
+    "领积分",
+    "Buddy 加油站",
+    "每日签到",
+    "自动签到"
+  ],
+  "dependencies": {
+    "skills": [],
+    "tools": []
+  },
+  "category": "productivity",
+  "entry": "SKILL.md",
+  "examples_zh": [
+    {
+      "title": "领取今日积分",
+      "description": "查询并领取今天 Buddy 加油站的积分",
+      "prompt": "帮我领取今天 Buddy 加油站的积分"
+    },
+    {
+      "title": "设置每日自动签到",
+      "description": "配置每天定时自动签到，并支持开机后补签",
+      "prompt": "设置每天自动签到领积分"
+    },
+    {
+      "title": "查看签到进度",
+      "description": "查询今日是否已签、连续天数与积分余额",
+      "prompt": "看看我连续签到多少天了"
+    }
+  ],
+  "examples_en": [
+    {
+      "title": "Claim today's credits",
+      "description": "Query and claim today's Buddy Gas Station credits",
+      "prompt": "claim today's Buddy Gas Station credits for me"
+    },
+    {
+      "title": "Set up daily auto check-in",
+      "description": "Configure a daily scheduled check-in with restart catch-up",
+      "prompt": "set up a daily auto check-in for credits"
+    },
+    {
+      "title": "Check check-in progress",
+      "description": "Show today's status, current streak and credit balance",
+      "prompt": "check my current check-in streak"
+    }
+  ]
+}

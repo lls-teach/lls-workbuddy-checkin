@@ -1,0 +1,23 @@
+{
+  "name": "Buddy 签到",
+  "installedAt": 1792597850983,
+  "source": "marketplace",
+  "version": "3.1.1",
+  "skillId": "skill_2104495161019002880",
+  "pay_mode": 0,
+  "examples_zh": [
+    "帮我领取今天 Buddy 加油站的积分",
+    "设置每天自动签到领积分",
+    "看看我连续签到多少天了"
+  ],
+  "examples_en": [
+    "claim today's Buddy Gas Station credits for me",
+    "set up a daily auto check-in for credits",
+    "check my current check-in streak"
+  ],
+  "description_zh": "WorkBuddy「Buddy 加油站」每日积分自动签到。经客户端宿主通道（WBIPC）直连接口，无需打开界面或点击按钮，也无需解密本地登录令牌；适配桌面端 v5.3.8+ 的加密登录态。支持仅查询、自动领取、领取后复核、开机自启补签与运行日志。",
+  "description_en": "Automated daily check-in for WorkBuddy Buddy Gas Station credits, via the client's host IPC channel (WBIPC) with direct API calls — no GUI clicking, no local token decryption. Compatible with the encrypted login state of desktop v5.3.8+. Supports scheduled runs, auto check-in right after restart, status-only query, post-claim verification, and run logs.",
+  "iconSource": "https://openplatform-cdn.codebuddy.cn/public/common/capability_cover/d093da0e-f800-4bce-a393-d85c5ce8963e/0952dbe2-09e1-4d35-b4a0-b92c87fda26c.png",
+  "iconLocalPath": "/Users/kanshan28/.workbuddy/skills/buddy-checkin/_icon.png",
+  "iconDownloadedFrom": "https://openplatform-cdn.codebuddy.cn/public/common/capability_cover/d093da0e-f800-4bce-a393-d85c5ce8963e/0952dbe2-09e1-4d35-b4a0-b92c87fda26c.png"
+}
