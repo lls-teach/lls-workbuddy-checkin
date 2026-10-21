@@ -1,15 +1,15 @@
 ---
-name: buddy-checkin
-display_name: Buddy 签到
+name: lls-workbuddy-checkin
+display_name: WorkBuddy 签到助手
 display_name_en: Buddy Check-in
 description: "WorkBuddy「Buddy 加油站」每日积分签到，经客户端宿主通道（WBIPC）直连接口，无需点击 GUI、无需解密本地令牌。兼容桌面端 v5.3.8+ 的加密登录态。支持每日定时、开机/重启后自动补签、状态查询、领取后二次复核与运行日志。当用户说「签到」「领积分」「Buddy 加油站」「每日签到」「自动签到」时使用。"
 description_zh: "WorkBuddy「Buddy 加油站」每日积分自动签到。经客户端宿主通道（WBIPC）直连接口，无需打开界面或点击按钮，也无需解密本地登录令牌；适配桌面端 v5.3.8+ 的加密登录态。支持仅查询、自动领取、领取后复核、开机自启补签与运行日志。"
 description_en: "Automated daily check-in for WorkBuddy Buddy Gas Station credits, via the client's host IPC channel (WBIPC) with direct API calls — no GUI clicking, no local token decryption. Compatible with the encrypted login state of desktop v5.3.8+. Supports scheduled runs, auto check-in right after restart, status-only query, post-claim verification, and run logs."
 category: productivity
-author: GTH
-version: 3.1.1
+author: 刘老师
+version: 3.3.0
 last_updated: 2026-09-29 12:48
-changelog: "v3.1.1 补充「图标与署名约定」：图标由 Pillow 矢量绘制生成，右下角固定 GTH 署名，并按内切圆安全区自校验（市场头像为圆形裁切，避免署名被切掉）；v3.1.0 首版发布：基于客户端宿主通道（WBIPC）实现每日积分签到，兼容桌面端 v5.3.8+ 加密登录态；支持定时签到、开机自启补签、状态查询与领取后复核"
+changelog: "v3.3.0 刘老师版：改走客户端宿主通道（WBIPC）直签，适配桌面端 v5.3.8+ 加密登录态，脚本不接触任何令牌；支持每日定时、开机/重启补签、状态查询、领取后复核与运行日志。"
 examples_zh:
   - 帮我领取今天 Buddy 加油站的积分
   - 设置每天自动签到领积分
@@ -21,7 +21,7 @@ examples_en:
 agent_created: true
 ---
 
-# Buddy 签到
+# WorkBuddy 签到助手
 
 经 WorkBuddy 客户端自带的宿主通道完成每日积分签到，全程无需打开界面、无需点击按钮，也**无需读取或解密本机登录令牌**。
 
@@ -47,7 +47,7 @@ Windows 上若 `python` 命令不可用，可用 WorkBuddy 自带的托管 Pytho
 ## 文件结构
 
 ```
-buddy-checkin/
+lls-workbuddy-checkin/
 ├── SKILL.md
 └── scripts/
     ├── checkin.py               # 主逻辑：状态查询 + 领取 + 复核
@@ -89,6 +89,16 @@ JSON 结果，关键字段：
 5. 输出 JSON 并追加写入 `scripts/logs/checkin.log`。
 
 关键点：**脚本只提交 method 与 path，鉴权头由客户端注入**，进程内不接触任何 accessToken。
+
+## 调用本 Skill 时的搭建流程（照做即可）
+
+> **重要**：凡是被「一句话安装」装进来的，装好后**不要停在「已安装」**——立刻按下面流程带用户一次走完：跑通第一次签到 → 建好每天 10:00 的自动签到 →（Windows 可选）注册开机自启兜底 → 引导微信每日提醒。全程由你主导，只在需要用户配合（看客户端、看手机）时才喊他。
+
+1. **自检**：运行 `python scripts/checkin.py --diagnose`，确认宿主通道模块可加载、接口连通。若提示找不到模块，说明不在 WorkBuddy 客户端环境内运行，按常见问题处理。
+2. **跑通第一次签到**：运行 `python scripts/checkin.py`。以输出 JSON 为准汇报：`clicked` 报 +N 积分与连续天数；`skip_already_signed` 说明今日已签；`verify_failed` 或 `error` 如实报告原因，绝不谎报成功。让用户去「Buddy 加油站」页面核对积分到账。
+3. **建每天 10:00 的自动签到**：用 WorkBuddy 自带「自动化」新建任务——名称 `WorkBuddy签到助手 · 每日自动签到`，规则 `FREQ=DAILY;BYHOUR=10;BYMINUTE=0`，任务内容为运行本技能的 `scripts/checkin.py`（幂等，重复执行无副作用）。生效条件先向用户讲清：届时电脑开机、WorkBuddy 开着并已登录、联网；没赶上时当天内打开客户端手动跑一次也能补签。
+4. **（Windows 可选）开机自启兜底**：询问用户是否要重启后自动补签；同意则运行 `python scripts/register_autostart.py --install` 并用 `--status` 复核。前提是 WorkBuddy 客户端本身随开机自启。
+5. **引导微信每日提醒**：说明自动签到的前提是电脑开着，引导用户在手机微信里用自带提醒功能建每天 10:00 的重复提醒，内容：「打开电脑，签到助手会自动签到领积分；电脑不开，今天就签不了。」——电脑开着时自动化自己签，提醒只是防忘的双保险。
 
 ## 定时自动签到
 
@@ -144,15 +154,6 @@ python scripts/register_autostart.py --uninstall   # 注销
 | 余额显示 null | 接口未返回余额字段，属正常；不影响签到结果 |
 | 开机后没签到 | 确认 WorkBuddy 客户端已随开机自启；查 `scripts/logs/start-checkin.log` |
 
-## 图标与署名约定
-
-本技能图标由 `_assets/make_icon.py` 用 Pillow 矢量绘制生成（512×512 PNG），非 AI 出图，便于按需重生成：
-
-- **右下角固定署名 `GTH`**（开发者署名，与 `author` 字段一致）。
-- 署名须完整落在**内切圆安全区**内 —— 技能市场的头像是圆形裁切，靠角落的署名会被切掉。
-  脚本按 `CIRCLE_SAFE` 比例自动求解沿 45° 的最大偏移，并打印 `inside=True/False` 自校验。
-- 改图后重跑 `make_icon.py`，它会同时导出 `_assets/_circle_preview.png` 用于肉眼复核圆形裁切效果。
-
 ## 适用平台与免责
 
 - 适用平台：Windows / macOS / Linux，需 Python 3.6+（仅用标准库，无第三方依赖）；
@@ -160,3 +161,13 @@ python scripts/register_autostart.py --uninstall   # 注销
 - 适用前提：本机已安装并登录 WorkBuddy 桌面客户端（v5.3.8+ 亦可）。
 - 本技能调用的是 WorkBuddy 客户端自有的签到接口，不涉及任何逆向或越权操作；
   签到规则、积分额度与活动周期由官方决定，本技能不保证任何积分收益。
+
+---
+
+## 出品：刘老师
+
+本 skill 由「刘老师（Liu Lao Shi）」（刘洪光，安徽合肥）出品，归属 [lls-teach](https://github.com/lls-teach)，是《WorkBuddy 从零基础到入门》系列课程的配套技能包。
+
+- GitHub 主页：https://github.com/lls-teach —— 刘老师系列课程与技能包都在此，欢迎 star
+- 视频号 / 抖音：搜「刘老师讲AI实战」
+- 微信：lhgsmsw

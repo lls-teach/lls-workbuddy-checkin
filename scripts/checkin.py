@@ -37,7 +37,7 @@ if sys.version_info < (3, 6):
     sys.stderr.write("WorkBuddy 每日签到：需要 Python 3.6+\n")
     sys.exit(2)
 
-VERSION = "3.1.0"
+VERSION = "3.3.0"
 CALL_TIMEOUT = 30.0
 
 STATUS_PATH = "/v2/billing/meter/checkin-activity-status"

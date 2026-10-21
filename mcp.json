@@ -1,11 +1,10 @@
 {
   "server_name": "buddy-checkin",
-  "display_name": "Buddy 签到",
+  "display_name": "WorkBuddy 签到助手",
   "description": "WorkBuddy「Buddy 加油站」每日积分自动签到，经客户端宿主通道（WBIPC）直连接口，无需点击界面、无需解密本地令牌，兼容桌面端 v5.3.8+ 加密登录态",
-  "version": "3.1.1",
+  "version": "3.3.0",
   "type": "skill",
-  "author": "GTH",
-  "license": "proprietary",
+  "author": "刘老师",
   "keywords": [
     "buddy-checkin",
     "daily-checkin",
