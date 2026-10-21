@@ -122,7 +122,7 @@ STATUS_PATH = "/billing/meter/checkin-activity-status"
 CHECKIN_PATH = "/billing/meter/daily-checkin"
 HTTP_TIMEOUT = 10
 MAX_RETRY = 1
-VERSION = "3.1.8"
+VERSION = "3.1.9"
 
 # 推送渠道覆盖（由命令行 --push-channels 设定，None=用配置里全部已就绪渠道）
 _PUSH_CHANNELS = None
@@ -1153,7 +1153,7 @@ def _push_failure(res):
         "> **时间**：%s\n\n"
         "> **原因**：%s\n\n"
         "> **登录态文件**：%s\n\n"
-        "> **处理建议**：请检查 WorkBuddy 是否已登录、电脑是否联网、09:00 前后是否开机且客户端未退出；"
+        "> **处理建议**：请检查 WorkBuddy 是否已登录、电脑是否联网、10:00 前后是否开机且客户端未退出；"
         "必要时重启客户端刷新登录态后，可手动再跑一次脚本。\n"
     ) % (now, msg, auth_file)
     try:

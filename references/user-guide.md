@@ -9,7 +9,7 @@
 - **12 类渠道消息推送**（可选）：钉钉 / 飞书 / 企业微信 / 微信 / 邮件 / 短信 / QQ / Slack / Telegram / Bark / 通用 Webhook / 系统通知，接口与配置项对标「消息推送」技能。
 - 提供 **环境自检**（`--diagnose`）与 **配置模板生成**（`--init-config`），降低首次配置门槛。
 
-> 适用对象：希望「每天自动领 Buddy 加油站积分」的 WorkBuddy 用户。安装 WorkBuddy签到助手 后，由 WorkBuddy 自带自动化在每天 09:00 触发；脚本零第三方依赖，仅用 Python 标准库。
+> 适用对象：希望「每天自动领 Buddy 加油站积分」的 WorkBuddy 用户。安装 WorkBuddy签到助手 后，由 WorkBuddy 自带自动化在每天 10:00 触发；脚本零第三方依赖，仅用 Python 标准库。
 
 ## 它能做什么
 
@@ -35,8 +35,8 @@
    - **本机登录态可用**（典型 Windows）→ 直接就能用，**无需任何配置**。
    - **本机登录态无法在本地解密**（典型 macOS）→ 引导你做一次网页授权（约 30 秒，见下一节）。
    - **已保存过长效令牌** → 走通道 C，客户端不开也能自动签到（见下下节）。
-3. Skill 把脚本落位到 `~/.workbuddy/scripts/`（`auto_checkin.py` / `workbuddy_checkin.py` / `web_auth.py` / `rt_auth.py` / `push_message.py` 五个文件，必须同目录）并创建每天 09:00 的自动化。
-4. 次日 09:00 自动领取；之后在 Buddy 加油站核对积分 +100。
+3. Skill 把脚本落位到 `~/.workbuddy/scripts/`（`auto_checkin.py` / `workbuddy_checkin.py` / `web_auth.py` / `rt_auth.py` / `push_message.py` 五个文件，必须同目录）并创建每天 10:00 的自动化。
+4. 次日 10:00 自动领取；之后在 Buddy 加油站核对积分 +100。
 
 手动运行（调试用）：
 
@@ -138,7 +138,7 @@ python "%USERPROFILE%/.workbuddy/scripts/web_auth.py" --setup-file <文件路径
 > 重要：**安装本 Skill 不等于已经签到**，也不会自动建任务。需要你说一句话触发。
 
 - **只签一次（推荐先试这个）**：对 WorkBuddy 说「帮我签到一次」或「现在签个到」→ Skill 直接运行脚本完成本次领取，不创建任何定时任务。适合点「去试试」后立即验证是否可用。
-- **设置每日自动签到**：说「帮我设置 WorkBuddy 每日自动签到」→ Skill 把脚本落位到 `~/.workbuddy/scripts/` 并创建每天 09:00 的 recurring 自动化，之后每天自动领。
+- **设置每日自动签到**：说「帮我设置 WorkBuddy 每日自动签到」→ Skill 把脚本落位到 `~/.workbuddy/scripts/` 并创建每天 10:00 的 recurring 自动化，之后每天自动领。
 - 若当天已手动签过，脚本会返回 `skip_already_signed`（幂等跳过），这是正常的，不是失败；返回结果会一并给出当前积分余额（若接口提供）。
 
 ## 派猫猫旅行（默认随签到一起执行）
@@ -173,7 +173,7 @@ python workbuddy_checkin.py --location 3           # 指定派去健身房（1-4
 - 每次执行后都会弹系统通知，展示「签到结果 + 积分余额（若有）」。
 - 无需任何配置，开箱即用；受 `--no-notify` 参数一并关闭。
 - 跨平台：Windows 气球提示 / macOS 通知中心 / Linux notify-send。
-- 注意：无桌面会话（如锁屏、09:00 系统任务未登录、服务器无 GUI）时可能不弹，但 `stdout` 的 JSON 结果与 `checkin.log` 仍会完整记录，不影响签到。
+- 注意：无桌面会话（如锁屏、10:00 系统任务未登录、服务器无 GUI）时可能不弹，但 `stdout` 的 JSON 结果与 `checkin.log` 仍会完整记录，不影响签到。
 
 ## 配置消息推送（可选，12 渠道）
 
@@ -316,13 +316,13 @@ A：说明 WorkBuddy 客户端未登录或登录态路径变更。请先打开 W
 A：客户端登录态失效（如长期未登录、token 过期）。重新打开 WorkBuddy 客户端登录即可刷新；无需重装技能。
 
 **Q：签到成功但没弹桌面通知？**
-A：常见于无桌面会话（锁屏、09:00 系统任务未登录、服务器无 GUI）。属预期行为，stdout 与 `checkin.log` 仍有完整记录。加 `--no-notify` 会主动关闭通知。
+A：常见于无桌面会话（锁屏、10:00 系统任务未登录、服务器无 GUI）。属预期行为，stdout 与 `checkin.log` 仍有完整记录。加 `--no-notify` 会主动关闭通知。
 
 **Q：怎么关闭桌面通知 / 消息推送？**
 A：桌面通知与消息推送均可加 `--no-notify` 一并关闭（调试用）。若要永久关闭推送，删除 `notify_config.json` 或将 `enabled` 设为 `false`；要关闭成功播报，将 `success_notify` 设为 `false`；只想临时少推几个渠道，用 `--push-channels` 指定。
 
 **Q：定时任务到点没跑？**
-A：依次检查：电脑是否开机、WorkBuddy 客户端是否退出、是否联网、09:00 前后是否保持客户端运行。系统级定时任务（计划任务/launchd/cron）还需检查其自身是否启用。
+A：依次检查：电脑是否开机、WorkBuddy 客户端是否退出、是否联网、10:00 前后是否保持客户端运行。系统级定时任务（计划任务/launchd/cron）还需检查其自身是否启用。
 
 **Q：网页版 WorkBuddy 能用吗？**
 A：不能。签到入口仅 PC 客户端专属，网页版无签到接口，脚本也无法在网页版运行。

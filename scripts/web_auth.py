@@ -44,7 +44,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-VERSION = "3.1.8"
+VERSION = "3.1.9"
 HTTP_TIMEOUT = 12
 
 HOME = os.path.expanduser("~")

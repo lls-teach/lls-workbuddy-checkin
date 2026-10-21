@@ -2,11 +2,11 @@
 name: lls-workbuddy-checkin
 display_name: WorkBuddy签到助手
 display_name_en: WorkBuddy Check-in Assistant
-description: WorkBuddy签到助手（WorkBuddy「Buddy 加油站」每日签到自动化 Skill，接口直签，跨平台 Windows/macOS/Linux）。当用户说"每天自动签到 / 每日签到 / 自动领 Buddy 加油站积分 / 现在签个到 / 帮我签到一次 / WorkBuddy 打卡 / 检查签到环境 / 派猫猫旅行 / 猫猫旅行 / 领旅行奖励 / 自动派猫猫 / Buddy 在旅行吗 / 推送签到结果 / 签到通知发钉钉 / 客户端更新后签不了 / 5.6.2 签到失败 / 登录态加密了 / Mac 上签不了 / 需要授权 / 长效令牌 / refreshToken / 不开客户端签到 / 令牌自动续期"时使用。三通道自动择一：本机登录态可用（如 Windows）零配置直签；无法本地解密（如 macOS）走一次性网页授权；或一次性保存长效令牌后自动续期，客户端不开也能签。支持派猫猫旅行全自动闭环（先领后派）、桌面通知与 12 类渠道推送（钉钉/飞书/企业微信/微信等），可设每日 09:00 自动签到。
-description_zh: WorkBuddy签到助手（WorkBuddy「Buddy 加油站」每日签到自动化 Skill，接口直签，跨平台 Windows/macOS/Linux）。当用户说"每天自动签到 / 每日签到 / 自动领 Buddy 加油站积分 / 现在签个到 / 帮我签到一次 / WorkBuddy 打卡 / 检查签到环境 / 派猫猫旅行 / 猫猫旅行 / 领旅行奖励 / 自动派猫猫 / Buddy 在旅行吗 / 推送签到结果 / 签到通知发钉钉 / 客户端更新后签不了 / 5.6.2 签到失败 / 登录态加密了 / Mac 上签不了 / 需要授权 / 长效令牌 / refreshToken / 不开客户端签到 / 令牌自动续期"时使用。三通道自动择一：本机登录态可用（如 Windows）零配置直签；无法本地解密（如 macOS）走一次性网页授权；或一次性保存长效令牌后自动续期，客户端不开也能签。支持派猫猫旅行全自动闭环（先领后派）、桌面通知与 12 类渠道推送（钉钉/飞书/企业微信/微信等），可设每日 09:00 自动签到。
-description_en: Auto check-in to WorkBuddy Buddy Station plus Buddy Travel, with three channels chosen automatically. With a usable local login state (typically Windows), a single request completes check-in with zero configuration. If the local login state cannot be decrypted (typically macOS), a one-time ~30s web-session authorization applies, whose code carries the original User-Agent, unaffected by gateway session binding. Or save a long-lived refresh token once; each run exchanges it for a fresh API token and writes the rotated token back for self-renewal, so check-in and Buddy dispatch keep working even with the desktop client closed. Cross-platform, with desktop notification and 12-channel push (DingTalk/Feishu/WeCom/WeChat/Email/SMS/QQ/Slack/Telegram/Bark/Webhook/system) with 12-channel push notifications; supports a daily 09:00 automation.
+description: WorkBuddy签到助手（WorkBuddy「Buddy 加油站」每日签到自动化 Skill，接口直签，跨平台 Windows/macOS/Linux）。当用户说"每天自动签到 / 每日签到 / 自动领 Buddy 加油站积分 / 现在签个到 / 帮我签到一次 / WorkBuddy 打卡 / 检查签到环境 / 派猫猫旅行 / 猫猫旅行 / 领旅行奖励 / 自动派猫猫 / Buddy 在旅行吗 / 推送签到结果 / 签到通知发钉钉 / 客户端更新后签不了 / 5.6.2 签到失败 / 登录态加密了 / Mac 上签不了 / 需要授权 / 长效令牌 / refreshToken / 不开客户端签到 / 令牌自动续期"时使用。三通道自动择一：本机登录态可用（如 Windows）零配置直签；无法本地解密（如 macOS）走一次性网页授权；或一次性保存长效令牌后自动续期，客户端不开也能签。支持派猫猫旅行全自动闭环（先领后派）、桌面通知与 12 类渠道推送（钉钉/飞书/企业微信/微信等），可设每日 10:00 自动签到。
+description_zh: WorkBuddy签到助手（WorkBuddy「Buddy 加油站」每日签到自动化 Skill，接口直签，跨平台 Windows/macOS/Linux）。当用户说"每天自动签到 / 每日签到 / 自动领 Buddy 加油站积分 / 现在签个到 / 帮我签到一次 / WorkBuddy 打卡 / 检查签到环境 / 派猫猫旅行 / 猫猫旅行 / 领旅行奖励 / 自动派猫猫 / Buddy 在旅行吗 / 推送签到结果 / 签到通知发钉钉 / 客户端更新后签不了 / 5.6.2 签到失败 / 登录态加密了 / Mac 上签不了 / 需要授权 / 长效令牌 / refreshToken / 不开客户端签到 / 令牌自动续期"时使用。三通道自动择一：本机登录态可用（如 Windows）零配置直签；无法本地解密（如 macOS）走一次性网页授权；或一次性保存长效令牌后自动续期，客户端不开也能签。支持派猫猫旅行全自动闭环（先领后派）、桌面通知与 12 类渠道推送（钉钉/飞书/企业微信/微信等），可设每日 10:00 自动签到。
+description_en: Auto check-in to WorkBuddy Buddy Station plus Buddy Travel, with three channels chosen automatically. With a usable local login state (typically Windows), a single request completes check-in with zero configuration. If the local login state cannot be decrypted (typically macOS), a one-time ~30s web-session authorization applies, whose code carries the original User-Agent, unaffected by gateway session binding. Or save a long-lived refresh token once; each run exchanges it for a fresh API token and writes the rotated token back for self-renewal, so check-in and Buddy dispatch keep working even with the desktop client closed. Cross-platform, with desktop notification and 12-channel push (DingTalk/Feishu/WeCom/WeChat/Email/SMS/QQ/Slack/Telegram/Bark/Webhook/system) with 12-channel push notifications; supports a daily 10:00 automation.
 category: 自动化
-version: 3.1.8
+version: 3.1.9
 author: 刘老师
 agent_created: true
 ---
@@ -155,7 +155,8 @@ WorkBuddy「Buddy 加油站」每日签到本质是一次带鉴权凭据的 HTTP
 
 | 版本 | 说明 |
 |---|---|
-| **3.1.8**（当前） | 安全加固版：①凭据请求加官方域名白名单（仅 workbuddy.cn / codebuddy.cn / copilot.tencent.com 及子域、必须 https），粘贴材料自带域名不在白名单直接拒绝；②客户端目录 DPAPI 密钥块扫描与进程内存寻钥改为显式开关（环境变量 `WORKBUDDY_ALLOW_KEY_HUNT=1` 才启用，只读探测不触发）；③长效令牌在 Windows 落盘改用 DPAPI 加密存储，`--export-rt` 默认只输出脱敏值，明文须加 `--show-secret` 显式确认；④`--forget` 改为随机覆写后删除文件；⑤推送渠道强制 https，失败推送不再带本机完整路径。 |
+| **3.1.9**（当前） | 默认自动化时间由 09:00 改为 10:00（照顾上班族作息）；搭建流程新增第 7 步「微信提醒接入」：装完默认主动询问、引导配置 PushPlus 微信推送并发测试消息验证接通。 |
+| 3.1.8 | 安全加固版：①凭据请求加官方域名白名单（仅 workbuddy.cn / codebuddy.cn / copilot.tencent.com 及子域、必须 https），粘贴材料自带域名不在白名单直接拒绝；②客户端目录 DPAPI 密钥块扫描与进程内存寻钥改为显式开关（环境变量 `WORKBUDDY_ALLOW_KEY_HUNT=1` 才启用，只读探测不触发）；③长效令牌在 Windows 落盘改用 DPAPI 加密存储，`--export-rt` 默认只输出脱敏值，明文须加 `--show-secret` 显式确认；④`--forget` 改为随机覆写后删除文件；⑤推送渠道强制 https，失败推送不再带本机完整路径。 |
 | 3.1.7 | 新增**通道 C 长效令牌自续期**：用户一次性导出/录入自己的长效令牌后，脚本每次运行自动换取新接口令牌并回写轮换结果，长期自续；配置后签到与派遣不再要求客户端运行。`auto_checkin.py --probe` 升级为三通道探测，新增 `--rt` 强制通道。通道 A / B 行为与 3.1.6 完全一致。 |
 | 3.1.6 | 新增**通道 B 网页会话授权**与**统一入口**，补齐 macOS 等「本机登录态无法本地解密」场景的自动签到能力；授权支持网页授权码 / cURL / HAR 三种来源，授权码自带原始 User-Agent 以适配网关的会话绑定。通道 A 行为与 3.1.2 完全一致。 |
 | 3.1.2 | 修复 5.6.2+ 加密登录态下密钥可能取不到的问题，并改进密钥取得失败时的诊断提示。 |
@@ -273,11 +274,16 @@ WorkBuddy「Buddy 加油站」每日签到本质是一次带鉴权凭据的 HTTP
 5. **创建 WorkBuddy 自带自动化**（不要用 crontab / launchd / 第三方定时器）
    - 用 `automation_update`（mode=create）创建 recurring 自动化：
      - name：`WorkBuddy签到助手 · 每日自动签到`
-     - rrule：`FREQ=DAILY;BYHOUR=9;BYMINUTE=0`
+     - rrule：`FREQ=DAILY;BYHOUR=10;BYMINUTE=0`
      - status：`ACTIVE`
    - 自动化提示词（让代理跑统一入口并脱敏汇报，两条通道通用）见 `@references/examples.md`。
 
-6. **向用户汇报**：走的哪条通道、自动化名称与执行时间、脚本路径；并提醒"若当天已手动签到会自动跳过；首个真实自动领取通常在次日 09:00，请在 Buddy 加油站核对积分 +100"。
+6. **向用户汇报**：走的哪条通道、自动化名称与执行时间、脚本路径；并提醒"若当天已手动签到会自动跳过；首个真实自动领取通常在次日 10:00，请在 Buddy 加油站核对积分 +100"。
+
+7. **询问并配置微信提醒**（默认主动问一次，用户说不要就跳过、不强推）
+   - 一句话问用户：「要不要把每天的签到结果发到你的微信？签成功、签失败都能第一时间知道。」
+   - 用户同意 → 引导三步：① 微信关注「PushPlus」公众号，在其官网个人中心拿到自己的 token；② 把 token 写进 `~/.workbuddy/scripts/notify_config.json` 的微信渠道（`pushplus_token`），按用户意愿决定是否打开 `success_notify`（默认失败必推、成功播报需显式开）；③ 立刻用推送模块独立发一条测试消息（`python scripts/push_message.py --title "签到助手测试" --content "微信提醒已接通" --ready`），让用户确认微信里收到，才算接通。
+   - 向用户说清边界：微信提醒是**单向通知**（电脑 → 微信）。在微信里回复消息不会触发签到，远程触发不在本 Skill 范围内；每天 10:00 自动化会自己签，不需要用户在微信里下指令。若 10:00 后一直没收到任何消息，多半是电脑没开或客户端没运行。
 
 ## 消息推送（可选，12 渠道）
 

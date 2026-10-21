@@ -39,7 +39,7 @@ python "%USERPROFILE%/.workbuddy/scripts/auto_checkin.py"
 约束：
 1. 严禁在任意输出中打印 token / accessToken / refreshToken，也不要回显任何推送凭据（webhook / smtp_pass / pushplus_token / bot_token）。
 2. 不要无限重试；脚本内部最多重试 1 次即可。
-3. 若命令执行失败（status=error），脚本会自动向已配置渠道推送失败提醒（前提是已配置 notify_config.json）；你仍需在对话中如实报告失败原因，并提示检查 WorkBuddy 是否已登录、电脑是否联网、是否在 09:00 前后保持开机且客户端未退出。
+3. 若命令执行失败（status=error），脚本会自动向已配置渠道推送失败提醒（前提是已配置 notify_config.json）；你仍需在对话中如实报告失败原因，并提示检查 WorkBuddy 是否已登录、电脑是否联网、是否在 10:00 前后保持开机且客户端未退出。
 4. 若推送未配置或未收到，不要谎报"已通知"。可先跑 `--diagnose` 看 `notify_config.ready`，并如实转述：例如"未配置任何推送渠道，请检查 notify_config.json"或"渠道 X 未配置（unconfigured）"。
 5. 推送失败不得影响签到结论与退出码；汇报时把推送状态与签到状态分开说。
 6. 不要擅自为推送渠道加付费项（如短信 sms），也不要自动加 `--confirm-paid`。
@@ -47,7 +47,7 @@ python "%USERPROFILE%/.workbuddy/scripts/auto_checkin.py"
 8. 通道 B 的授权凭据只存本机 `~/.workbuddy/checkin-cred.json`，不要写入技能目录、不要随包分发、不要提交到仓库。
 ```
 
-> 路径统一用 `%USERPROFILE%`（Windows）/ `~`（macOS、Linux），无需替换用户名。推荐 rrule：`FREQ=DAILY;BYHOUR=9;BYMINUTE=0`（每天 09:00）。
+> 路径统一用 `%USERPROFILE%`（Windows）/ `~`（macOS、Linux），无需替换用户名。推荐 rrule：`FREQ=DAILY;BYHOUR=10;BYMINUTE=0`（每天 10:00）。
 
 ---
 
