@@ -311,10 +311,10 @@ GET /activity/growth/buddy/travel/config
 
 ```python
 CHANNELS = {"dingtalk": build_dingtalk, "feishu": build_feishu, "wecom": build_wecom,
-            "wechat": build_wechat, "email": build_email, "sms": build_sms, "qq": build_qq,
+            "email": build_email, "sms": build_sms, "qq": build_qq,
             "slack": build_slack, "telegram": build_telegram, "bark": build_bark,
             "webhook": build_webhook}          # 11 个走网络/邮件的渠道
-SUPPORTED   = [...11 项..., "system"]          # 对外宣称支持的 12 类
+SUPPORTED   = [...11 项..., "system"]          # 对外宣称支持的 11 类
 ZERO_CONFIG = {"system"}                       # 无需任何凭据
 PAID_CHANNELS = {"sms"}                        # 付费渠道，需 confirm_paid=True 才放行
 ```
@@ -338,10 +338,9 @@ PAID_CHANNELS = {"sms"}                        # 付费渠道，需 confirm_paid
 - 新结构：`{"channels": {"dingtalk": {"webhook": ...}, "email": {...}}}`
 - 旧扁平字段（向后兼容，仅微信三通道）：
   - `wecom_webhook` → `wecom.webhook`
-  - `pushplus_token` → `wechat.pushplus_token`
   - `bark_url` → `bark.server` + `bark.device_key`（由 `_split_bark_url` 自动拆分）
 
-**为什么是合并而不是二选一**：若写成「出现 `channels` 就整体忽略旧字段」，老用户只想新增一个渠道（如在 `channels` 里加 `email`）时，原有企业微信 / PushPlus / Bark 推送会静默失效。合并语义避免了这类回归。
+**为什么是合并而不是二选一**：若写成「出现 `channels` 就整体忽略旧字段」，老用户只想新增一个渠道（如在 `channels` 里加 `email`）时，原有企业微信 / Bark 推送会静默失效。合并语义避免了这类回归。
 
 ### 6.3 渠道接口清单（与实现一一对应）
 
@@ -350,7 +349,6 @@ PAID_CHANNELS = {"sms"}                        # 付费渠道，需 confirm_paid
 | `dingtalk` | 用户填的 `webhook` | POST markdown；填 `secret` 时追加 `&timestamp=<毫秒>&sign=<HMAC-SHA256>` |
 | `feishu` | 用户填的 `webhook` | POST `msg_type=text`；填 `secret` 时追加 `timestamp=<秒>&sign=` |
 | `wecom` | 用户填的 `webhook`（`https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=<KEY>`） | POST markdown，正文前缀 `# 标题`；填 `secret` 时追加毫秒级签名 |
-| `wechat` | `https://www.pushplus.plus/send` | POST，`token` + `template`（markdown/html） |
 | `email` | `smtp_host:smtp_port` | `smtplib`；默认 465 + SSL，`smtp_mode=starttls` 可切；`smtp_pass` 为授权码 |
 | `sms` | 用户填的 `url` + `payload_template` | POST（**付费**，默认拦截）；支持 `headers` |
 | `qq` | 用户填的 `url` | 直接复用 `build_webhook` |

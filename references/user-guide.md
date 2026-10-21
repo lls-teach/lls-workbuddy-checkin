@@ -6,7 +6,7 @@
 
 - **默认一次跑完两件事**：每日签到 + 派猫猫旅行全自动闭环（先领旅行积分，再派 Buddy 出门）。
 - 执行完弹出**操作系统级桌面通知**（跨平台：Windows / macOS / Linux），展示签到结果、积分余额与旅行状态；无桌面会话时自动跳过，不影响签到。
-- **12 类渠道消息推送**（可选）：钉钉 / 飞书 / 企业微信 / 微信 / 邮件 / 短信 / QQ / Slack / Telegram / Bark / 通用 Webhook / 系统通知，接口与配置项对标「消息推送」技能。
+- **11 类渠道消息推送**（可选）：钉钉 / 飞书 / 企业微信 / 微信 / 邮件 / 短信 / QQ / Slack / Telegram / Bark / 通用 Webhook / 系统通知，接口与配置项对标「消息推送」技能。
 - 提供 **环境自检**（`--diagnose`）与 **配置模板生成**（`--init-config`），降低首次配置门槛。
 
 > 适用对象：希望「每天自动领 Buddy 加油站积分」的 WorkBuddy 用户。安装 WorkBuddy签到助手 后，由 WorkBuddy 自带自动化在每天 10:00 触发；脚本零第三方依赖，仅用 Python 标准库。
@@ -175,7 +175,7 @@ python workbuddy_checkin.py --location 3           # 指定派去健身房（1-4
 - 跨平台：Windows 气球提示 / macOS 通知中心 / Linux notify-send。
 - 注意：无桌面会话（如锁屏、10:00 系统任务未登录、服务器无 GUI）时可能不弹，但 `stdout` 的 JSON 结果与 `checkin.log` 仍会完整记录，不影响签到。
 
-## 配置消息推送（可选，12 渠道）
+## 配置消息推送（可选，11 渠道）
 
 签到失败（默认）或成功（需开启）时，可推送到以下渠道。**配置完全可选**——不配任何渠道时，脚本仅输出 JSON 结果，行为与之前完全一致。
 
@@ -184,7 +184,6 @@ python workbuddy_checkin.py --location 3           # 指定派去健身房（1-4
 | 钉钉群机器人 | `dingtalk` | `webhook` | 可选 `secret` 加签 |
 | 飞书群机器人 | `feishu` | `webhook` | 可选 `secret` |
 | 企业微信群机器人 | `wecom` | `webhook` | |
-| 微信（PushPlus 中转） | `wechat` | `pushplus_token` | 推送到个人微信 |
 | 邮件 | `email` | `smtp_host` / `smtp_user` / `smtp_pass` / `from` / `to` | `smtp_pass` 填**授权码**非登录密码 |
 | 短信 | `sms` | `url` / `payload_template` | **付费渠道**，需 `--confirm-paid` |
 | QQ | `qq` | `url` | 需自备推送网关 |
@@ -206,7 +205,6 @@ python workbuddy_checkin.py --location 3           # 指定派去健身房（1-4
     "dingtalk": { "webhook": "https://oapi.dingtalk.com/robot/send?access_token=你的TOKEN" },
     "feishu":   { "webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/你的HOOK" },
     "wecom":    { "webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=你的KEY" },
-    "wechat":   { "pushplus_token": "你的PushPlus_token" },
     "email": {
       "smtp_host": "smtp.qq.com", "smtp_port": 465, "smtp_mode": "ssl",
       "smtp_user": "你的邮箱@qq.com", "smtp_pass": "邮箱授权码",
@@ -227,7 +225,6 @@ python workbuddy_checkin.py --location 3           # 指定派去健身房（1-4
   "enabled": true,
   "success_notify": false,
   "wecom_webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=你的群机器人KEY",
-  "pushplus_token": "你的PushPlus_token",
   "bark_url": "https://api.day.app/你的KEY/"
 }
 ```
@@ -346,7 +343,7 @@ A：完全一样（都是随机 1-4 小时、5-10 积分），咖啡馆 / 商场
 A：旅行接口偶发不可用时会静默跳过，不影响签到。可单独跑 `python workbuddy_checkin.py travel` 看 `travel.available` 是否为 `true`。
 
 **Q：如何获取各渠道的密钥？**
-A：企业微信群机器人 Webhook 在群设置→群机器人添加；钉钉 / 飞书同理在群机器人里拿 Webhook（钉钉加签需额外填 `secret`）；PushPlus token 在 pushplus.plus 注册后获取；Bark key 在 iOS Bark App 内获取；邮件用邮箱服务商的 SMTP 授权码（非登录密码）。详见上方「配置消息推送」。
+A：企业微信群机器人 Webhook 在群设置→群机器人添加；钉钉 / 飞书同理在群机器人里拿 Webhook（钉钉加签需额外填 `secret`）；Bark key 在 iOS Bark App 内获取；邮件用邮箱服务商的 SMTP 授权码（非登录密码）。详见上方「配置消息推送」。
 
 **Q：推送结果里某渠道显示 `unconfigured` / `skipped` 是什么意思？**
 A：`unconfigured` = 该渠道必填项没配齐，不是网络问题；`skipped` = 主动跳过（例如短信未加 `--confirm-paid`）。`failed` 才是真的发送失败，通常看该渠道 webhook 是否失效。

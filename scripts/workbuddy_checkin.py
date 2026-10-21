@@ -30,7 +30,7 @@ WorkBuddy签到助手（每日自动签到脚本，接口直签，无需 GUI 点
 失败推送（可选）：
   若签到结果为 status!=ok，会读取本地配置文件
   ~/.workbuddy/scripts/notify_config.json（若存在），向已配置的渠道推送失败提醒。
-  支持 12 类渠道：企业微信/钉钉/飞书/微信(PushPlus)/邮件/短信/QQ/Slack/Telegram/Bark/通用 Webhook/系统通知。
+  支持 11 类渠道：企业微信/钉钉/飞书/邮件/短信/QQ/Slack/Telegram/Bark/通用 Webhook/系统通知。
   配置缺失的渠道自动跳过，单渠道失败不影响其他渠道，不影响签到。
 
 成功推送（可选，默认关闭）：
@@ -122,7 +122,7 @@ STATUS_PATH = "/billing/meter/checkin-activity-status"
 CHECKIN_PATH = "/billing/meter/daily-checkin"
 HTTP_TIMEOUT = 10
 MAX_RETRY = 1
-VERSION = "3.1.9"
+VERSION = "3.2.0"
 
 # 推送渠道覆盖（由命令行 --push-channels 设定，None=用配置里全部已就绪渠道）
 _PUSH_CHANNELS = None
@@ -1139,7 +1139,7 @@ def load_notify_config():
 def _push_failure(res):
     """签到失败时，按本地配置推送提醒；配置缺失或推送模块不可用时静默跳过。
 
-    通过 push_message.send_message 调度多渠道（钉钉/飞书/企业微信/PushPlus/Bark/邮件/…），
+    通过 push_message.send_message 调度多渠道（钉钉/飞书/企业微信/Bark/邮件/…），
     单渠道失败不影响其他渠道，也不影响签到结果与退出码。
     """
     if push_message is None:
@@ -1738,7 +1738,7 @@ def diagnose():
             report["notify_config"]["present"] = True
             report["notify_config"]["enabled"] = cfg.get("enabled", True)
             report["notify_config"]["success_notify"] = bool(cfg.get("success_notify"))
-            channels = [k for k in ("wecom_webhook", "pushplus_token", "bark_url") if cfg.get(k)]
+            channels = [k for k in ("wecom_webhook", "bark_url") if cfg.get(k)]
             report["notify_config"]["channels"] = channels
             if cfg.get("enabled", True) and not channels:
                 report["notify_config"]["warn"] = "enabled=true 但未填写任何通道，推送不会生效"
@@ -1776,9 +1776,9 @@ USAGE = (
     "  → DPAPI blob 扫描 → 运行中 WorkBuddy.exe 进程内存扫描（5.6.2 密钥不落盘、\n"
     "  只驻留客户端内存；此路径需客户端已启动登录且与脚本同一 Windows 用户）。\n"
     "消息推送说明：\n"
-    "  支持 12 类渠道：dingtalk/feishu/wecom/wechat(pushplus)/email/sms/qq/slack/telegram/bark/webhook/system。\n"
+    "  支持 11 类渠道：dingtalk/feishu/wecom/email/sms/qq/slack/telegram/bark/webhook/system。\n"
     "  失败自动推送（配置缺失则静默跳过）；成功播报需 success_notify=true。\n"
-    "  渠道/凭据见 ~/.workbuddy/scripts/notify_config.json（旧结构微信三字段仍兼容）。\n"
+    "  渠道/凭据见 ~/.workbuddy/scripts/notify_config.json（旧结构扁平字段（wecom_webhook / bark_url）仍兼容）。\n"
 )
 
 
@@ -1806,7 +1806,7 @@ def main():
         p = push_message.write_sample()
         print("已生成配置模板：%s" % p)
         print("复制为 notify_config.json 并填入你的通道密钥（或使用默认值保持关闭）。")
-        print("支持渠道见 README『消息推送』章节；旧结构微信三字段仍兼容。")
+        print("支持渠道见 README『消息推送』章节；旧结构扁平字段（wecom_webhook / bark_url）仍兼容。")
         sys.exit(0)
     check_only = "--check-only" in sys.argv
     no_notify = "--no-notify" in sys.argv

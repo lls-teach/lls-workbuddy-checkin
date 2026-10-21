@@ -5,7 +5,7 @@
 多渠道消息推送模块，作为本签到技能的
 自包含推送能力（不依赖任何外部 Skill，便于离线分发）。
 
-支持渠道：dingtalk, feishu, wecom, wechat(pushplus), email, sms,
+支持渠道：dingtalk, feishu, wecom, email, sms,
 qq, slack, telegram, bark, webhook(通用), system(本地系统通知，零配置不过网)。
 
 配置来源（沿用签到技能的 notify_config.json）：
@@ -13,7 +13,7 @@ qq, slack, telegram, bark, webhook(通用), system(本地系统通知，零配�
   - ~/.workbuddy/scripts/notify_config.json（默认）
 同时兼容两种写法：
   (a) 新结构：{"channels": {"wecom": {"webhook": "..."}, ...}}
-  (b) 旧结构（向后兼容）：{"wecom_webhook": "...", "pushplus_token": "...", "bark_url": "..."}
+  (b) 旧结构（向后兼容）：{"wecom_webhook": "...", "bark_url": "..."}
 
 所有 HTTP 调用使用 urllib，邮件使用 smtplib，无第三方依赖。
 凭据仅从本地配置文件读取，绝不输出到日志或 stdout 的值。
@@ -53,7 +53,7 @@ ZERO_CONFIG = {"system"}  # 无需任何凭据/配置的渠道
 PAID_CHANNELS = {"sms"}
 
 SUPPORTED = [
-    "dingtalk", "feishu", "wecom", "wechat", "email",
+    "dingtalk", "feishu", "wecom", "email",
     "sms", "qq", "slack", "telegram", "bark", "webhook", "system",
 ]
 
@@ -94,10 +94,10 @@ def normalize_channels(cfg: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     """把原始配置归一化为内部 channel->credentials 映射，新结构优先、旧字段补齐缺口。
 
     - 新结构：取 cfg["channels"] 里的各渠道配置（同渠道以新结构为准）
-    - 旧结构：把 wecom_webhook / pushplus_token / bark_url 映射成对应渠道
+    - 旧结构：把 wecom_webhook / bark_url 映射成对应渠道
     - 两者**按渠道合并**：某渠道已在 channels 中出现则用新结构，否则用旧字段补齐。
 
-    合并而非二选一，是为了避免老用户「只想新增一个渠道、结果原有微信通道静默失效」。
+    合并而非二选一，是为了避免老用户「只想新增一个渠道、结果原有通道静默失效」。
     """
     out: Dict[str, Dict[str, Any]] = {}
     channels = cfg.get("channels")
@@ -111,10 +111,6 @@ def normalize_channels(cfg: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
         wecom = cfg.get("wecom_webhook")
         if wecom:
             out["wecom"] = {"webhook": wecom}
-    if "wechat" not in out:
-        pushplus = cfg.get("pushplus_token")
-        if pushplus:
-            out["wechat"] = {"pushplus_token": pushplus}
     if "bark" not in out:
         bark = cfg.get("bark_url")
         if bark:
@@ -246,21 +242,6 @@ def build_wecom(cfg: Dict[str, Any], msg: Dict[str, Any]):
     return ("http", url, payload, None)
 
 
-def build_wechat(cfg: Dict[str, Any], msg: Dict[str, Any]):
-    token = cfg.get("pushplus_token")
-    if not token:
-        raise ConfigError("wechat 缺少 pushplus_token")
-    url = "https://www.pushplus.plus/send"
-    template = "markdown" if msg.get("content_type") == "markdown" else "html"
-    payload = {
-        "token": token,
-        "title": msg.get("title", ""),
-        "content": msg.get("content", ""),
-        "template": template,
-    }
-    return ("http", url, payload, None)
-
-
 def build_email(cfg: Dict[str, Any], msg: Dict[str, Any]):
     for key in ("smtp_host", "smtp_user", "smtp_pass", "from", "to"):
         if not cfg.get(key):
@@ -332,7 +313,6 @@ CHANNELS = {
     "dingtalk": build_dingtalk,
     "feishu": build_feishu,
     "wecom": build_wecom,
-    "wechat": build_wechat,
     "email": build_email,
     "sms": build_sms,
     "qq": build_qq,
@@ -535,14 +515,13 @@ def ready_channels(config_path: Optional[str] = None) -> Dict[str, Any]:
 # --------------------------------------------------------------------------- #
 _SAMPLE_CONFIG = {
     "_说明": "WorkBuddy签到助手推送配置模板。按需只保留你用得到的渠道，未配置的渠道会自动跳过（不报错）。凭据仅存本地，勿提交到 git 或外发。",
-    "_旧结构写法": "若你沿用 2.x 的扁平字段（wecom_webhook / pushplus_token / bark_url），无需改动，脚本会自动识别并与本结构按渠道合并；同渠道以本结构为准。详见 README『配置消息推送』。",
+    "_旧结构写法": "若你沿用 2.x 的扁平字段（wecom_webhook / bark_url），无需改动，脚本会自动识别并与本结构按渠道合并；同渠道以本结构为准。详见 README『配置消息推送』。",
     "enabled": True,
     "success_notify": False,
     "channels": {
         "dingtalk": {"webhook": "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN", "secret": "YOUR_SECRET(可选加签)"},
         "feishu": {"webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/YOUR_HOOK", "secret": "YOUR_SECRET(可选)"},
         "wecom": {"webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY", "secret": "YOUR_SECRET(可选)"},
-        "wechat": {"pushplus_token": "YOUR_PUSHPLUS_TOKEN（微信个人号中转）"},
         "email": {"smtp_host": "smtp.qq.com", "smtp_port": 465, "smtp_mode": "ssl", "smtp_user": "123@qq.com", "smtp_pass": "邮箱授权码(非登录密码)", "from": "123@qq.com", "to": "to@qq.com"},
         "sms": {"url": "https://your-sms-provider.com/send", "payload_template": '{"content":"{{content}}"}', "headers": {"Authorization": "Bearer YOUR_KEY"}},
         "qq": {"url": "https://your-qq-push-gateway/send"},

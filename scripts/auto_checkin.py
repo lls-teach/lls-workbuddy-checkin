@@ -39,7 +39,7 @@ import json
 import os
 import sys
 
-VERSION = "3.1.9"
+VERSION = "3.2.0"
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 CHANNEL_FLAGS = ("--web", "--local", "--rt", "--probe")

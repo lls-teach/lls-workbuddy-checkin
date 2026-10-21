@@ -37,7 +37,7 @@ python "%USERPROFILE%/.workbuddy/scripts/auto_checkin.py"
 - auto_log 逐条列出本次实际动作（领取 / 派遣 / 跳过原因），照实转述。
 
 约束：
-1. 严禁在任意输出中打印 token / accessToken / refreshToken，也不要回显任何推送凭据（webhook / smtp_pass / pushplus_token / bot_token）。
+1. 严禁在任意输出中打印 token / accessToken / refreshToken，也不要回显任何推送凭据（webhook / smtp_pass / bot_token）。
 2. 不要无限重试；脚本内部最多重试 1 次即可。
 3. 若命令执行失败（status=error），脚本会自动向已配置渠道推送失败提醒（前提是已配置 notify_config.json）；你仍需在对话中如实报告失败原因，并提示检查 WorkBuddy 是否已登录、电脑是否联网、是否在 10:00 前后保持开机且客户端未退出。
 4. 若推送未配置或未收到，不要谎报"已通知"。可先跑 `--diagnose` 看 `notify_config.ready`，并如实转述：例如"未配置任何推送渠道，请检查 notify_config.json"或"渠道 X 未配置（unconfigured）"。
@@ -158,13 +158,13 @@ python "%USERPROFILE%/.workbuddy/scripts/workbuddy_checkin.py" --version        
     "present": true,
     "enabled": true,
     "success_notify": true,
-    "ready": ["wechat"],
+    "ready": ["wecom"],
     "unconfigured": ["dingtalk", "feishu", "wecom", "email", "sms", "qq", "slack", "telegram", "bark", "webhook"]
   }
 }
 ```
 
-推送（`push_message.py` 独立运行，节选；本机仅配了 PushPlus，故 `ready=[wechat]`）：
+推送（`push_message.py` 独立运行，节选；本机仅配了企业微信，故 `ready=[wecom]`）：
 
 ```json
 // --channels system（零配置，离线可用）
@@ -185,7 +185,7 @@ python "%USERPROFILE%/.workbuddy/scripts/workbuddy_checkin.py" --version        
 
 ---
 
-## 3. 消息推送配置（可选，12 渠道）
+## 3. 消息推送配置（可选，11 渠道）
 
 ### 3.1 配置文件路径
 
@@ -202,7 +202,6 @@ python "%USERPROFILE%/.workbuddy/scripts/workbuddy_checkin.py" --version        
     "dingtalk": { "webhook": "https://oapi.dingtalk.com/robot/send?access_token=你的TOKEN", "secret": "加签密钥(可选)" },
     "feishu":   { "webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/你的HOOK" },
     "wecom":    { "webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=你的KEY" },
-    "wechat":   { "pushplus_token": "你的PushPlus_token" },
     "email": {
       "smtp_host": "smtp.qq.com", "smtp_port": 465, "smtp_mode": "ssl",
       "smtp_user": "你的邮箱@qq.com", "smtp_pass": "邮箱授权码",
@@ -225,7 +224,6 @@ python "%USERPROFILE%/.workbuddy/scripts/workbuddy_checkin.py" --version        
   "enabled": true,
   "success_notify": false,
   "wecom_webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=你的群机器人KEY",
-  "pushplus_token": "你的PushPlus_token",
   "bark_url": "https://api.day.app/你的KEY/"
 }
 ```
@@ -239,7 +237,7 @@ python "%USERPROFILE%/.workbuddy/scripts/workbuddy_checkin.py" --version        
 | `enabled` | 总开关；`false` 时不推送（显式 `--push-channels` 可覆盖） |
 | `success_notify` | `true` 时签到成功也推播报；默认 `false` 仅失败时提醒 |
 | `channels` | 新结构渠道映射，按需只填你用得到的渠道 |
-| `wecom_webhook` / `pushplus_token` / `bark_url` | 旧结构兼容字段，效果等同新结构里的 `wecom` / `wechat` / `bark` |
+| `wecom_webhook` / `bark_url` | 旧结构兼容字段，效果等同新结构里的 `wecom` / `wechat` / `bark` |
 
 - 未配置的渠道**不会报错**，只在结果里标 `unconfigured`。
 - 不想手写？运行 `python workbuddy_checkin.py --init-config` 生成双结构模板（也可直接看技能包内 `templates/notify_config.json.example`）。
@@ -252,7 +250,6 @@ python "%USERPROFILE%/.workbuddy/scripts/workbuddy_checkin.py" --version        
 | 钉钉群机器人 | 钉钉群 → 群设置 → 智能群助手 → 添加机器人 → 自定义，复制 Webhook；选「加签」时把密钥填到 `secret` |
 | 飞书群机器人 | 飞书群 → 设置 → 群机器人 → 添加自定义机器人，复制 Webhook |
 | 企业微信群机器人 | 企业微信群 → 群设置 → 群机器人 → 添加机器人，复制 Webhook URL |
-| 微信（PushPlus） | 注册 https://www.pushplus.plus ，在「一对一推送」拿到 token |
 | 邮件 | 用邮箱服务商的 SMTP 服务；`smtp_pass` 填**授权码**（非登录密码），QQ 邮箱在「设置 → 账户」开启 SMTP 后获取 |
 | Bark（iOS） | 安装 Bark App，App 内复制 `https://api.day.app/<KEY>/` |
 | Telegram | 找 @BotFather 建 bot 拿 `bot_token`；`chat_id` 可用 @userinfobot 查 |
@@ -305,7 +302,7 @@ workbuddy_checkin.py --confirm-paid                  # 放行付费渠道（短�
 - ❌ 不要在本机登录态可用时让用户去做网页授权（多余操作）；先用 `auto_checkin.py --probe` 判断。
 - ❌ 不要在本机登录态不可用时反复重试或尝试寻找解密密钥（macOS 上属系统级限制，无解）——直接引导一次网页授权。
 - ❌ 不要把网页授权凭据写进技能目录、随包分发或提交到仓库。
-- ❌ 不要在汇报里回显任何推送凭据（webhook / smtp_pass / pushplus_token / bot_token）。
+- ❌ 不要在汇报里回显任何推送凭据（webhook / smtp_pass / bot_token）。
 - ❌ 不要用 crontab / 系统计划任务替代 WorkBuddy 自带自动化（Skill 场景内）；系统级定时任务请用独立的「WorkBuddy 自动签到分享包」。
 - ❌ 不要伪造、猜测或回显 token / accessToken / refreshToken。
 - ❌ 不要无限重试（脚本内部最多重试 1 次）。
