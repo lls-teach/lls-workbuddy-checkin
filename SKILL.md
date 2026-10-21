@@ -6,7 +6,7 @@ description: WorkBuddy签到助手（WorkBuddy「Buddy 加油站」每日签到�
 description_zh: WorkBuddy签到助手（WorkBuddy「Buddy 加油站」每日签到自动化 Skill，接口直签，跨平台 Windows/macOS/Linux）。当用户说"每天自动签到 / 每日签到 / 自动领 Buddy 加油站积分 / 现在签个到 / 帮我签到一次 / WorkBuddy 打卡 / 检查签到环境 / 派猫猫旅行 / 猫猫旅行 / 领旅行奖励 / 自动派猫猫 / Buddy 在旅行吗 / 推送签到结果 / 签到通知发钉钉 / 客户端更新后签不了 / 5.6.2 签到失败 / 登录态加密了 / Mac 上签不了 / 需要授权 / 长效令牌 / refreshToken / 不开客户端签到 / 令牌自动续期"时使用。三通道自动择一：本机登录态可用（如 Windows）零配置直签；无法本地解密（如 macOS）走一次性网页授权；或一次性保存长效令牌后自动续期，客户端不开也能签。支持派猫猫旅行全自动闭环（先领后派）、桌面通知与 11 类渠道推送（钉钉/飞书/企业微信等），可设每日 10:00 自动签到。
 description_en: Auto check-in to WorkBuddy Buddy Station plus Buddy Travel, with three channels chosen automatically. With a usable local login state (typically Windows), a single request completes check-in with zero configuration. If the local login state cannot be decrypted (typically macOS), a one-time ~30s web-session authorization applies, whose code carries the original User-Agent, unaffected by gateway session binding. Or save a long-lived refresh token once; each run exchanges it for a fresh API token and writes the rotated token back for self-renewal, so check-in and Buddy dispatch keep working even with the desktop client closed. Cross-platform, with desktop notification and 11-channel push (DingTalk/Feishu/WeCom/Email/SMS/QQ/Slack/Telegram/Bark/Webhook/system) with 11-channel push notifications; supports a daily 10:00 automation.
 category: 自动化
-version: 3.2.0
+version: 3.2.1
 author: 刘老师
 agent_created: true
 ---
@@ -155,7 +155,8 @@ WorkBuddy「Buddy 加油站」每日签到本质是一次带鉴权凭据的 HTTP
 
 | 版本 | 说明 |
 |---|---|
-| **3.2.0**（当前） | 移除 PushPlus 微信中转渠道（推送渠道 12 → 11）；第 7 步改为「微信自带提醒」：引导用户在微信里建每天 10:00 的重复提醒，提醒打开电脑——电脑开着自动化自己签，电脑没开则签不了，提醒负责把人叫去开电脑。 |
+| **3.2.1**（当前） | 文档与引导补强：一句话安装改为「装完带我走完搭建流程」的完整版；README 新增「装完之后要做的事」；搭建流程开头加硬性要求——一句话装进来的必须继续走完流程、不许停在已安装。 |
+| 3.2.0 | 移除 PushPlus 微信中转渠道（推送渠道 12 → 11）；第 7 步改为「微信自带提醒」：引导用户在微信里建每天 10:00 的重复提醒，提醒打开电脑——电脑开着自动化自己签，电脑没开则签不了，提醒负责把人叫去开电脑。 |
 | 3.1.9 | 默认自动化时间由 09:00 改为 10:00（照顾上班族作息）；搭建流程新增第 7 步「每日提醒引导」。 |
 | 3.1.8 | 安全加固版：①凭据请求加官方域名白名单（仅 workbuddy.cn / codebuddy.cn / copilot.tencent.com 及子域、必须 https），粘贴材料自带域名不在白名单直接拒绝；②客户端目录 DPAPI 密钥块扫描与进程内存寻钥改为显式开关（环境变量 `WORKBUDDY_ALLOW_KEY_HUNT=1` 才启用，只读探测不触发）；③长效令牌在 Windows 落盘改用 DPAPI 加密存储，`--export-rt` 默认只输出脱敏值，明文须加 `--show-secret` 显式确认；④`--forget` 改为随机覆写后删除文件；⑤推送渠道强制 https，失败推送不再带本机完整路径。 |
 | 3.1.7 | 新增**通道 C 长效令牌自续期**：用户一次性导出/录入自己的长效令牌后，脚本每次运行自动换取新接口令牌并回写轮换结果，长期自续；配置后签到与派遣不再要求客户端运行。`auto_checkin.py --probe` 升级为三通道探测，新增 `--rt` 强制通道。通道 A / B 行为与 3.1.6 完全一致。 |
@@ -245,6 +246,8 @@ WorkBuddy「Buddy 加油站」每日签到本质是一次带鉴权凭据的 HTTP
 - **环境自检（--diagnose / --probe）**：只读自检并输出 JSON 报告，便于首次安装后确认环境就绪。
 
 ## 调用本 Skill 时的搭建流程（照做即可）
+
+> **重要**：凡是被「一句话安装」装进来的，装好后**不要停在「已安装」**——立刻按下面流程带用户一次走完：跑通第一次签到 → 建好每天 10:00 的自动签到 → 引导微信每日提醒。全程由你主导，只在需要用户配合（授权、看手机）时才喊他。
 
 当用户要求搭建/修复自动签到，或换机/重装后重建时：
 

@@ -40,7 +40,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = "3.2.0"
+VERSION = "3.2.1"
 HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
